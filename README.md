@@ -1,1 +1,1 @@
-# challengue-puzzle-react-native-carousel
+# challenge-puzzle-react-native-carousel
