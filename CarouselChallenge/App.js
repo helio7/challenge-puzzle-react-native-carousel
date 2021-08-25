@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
 
 // I know these imports look a bit repetitive, but I don't
 // know how to better import the images. So for the purposes
@@ -54,6 +54,22 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text>Open up App.js to start working on your app!</Text>
+      {/* 
+        My first idea is to implement the carousel using
+        an horizontal FlatList.
+      */}
+      <FlatList
+        data={carouselData}
+        renderItem={({item}) => 
+          <View>
+            <Text>{item.title}</Text>
+            <Image
+              style={styles.carouselImage}
+              source={item.images[0]}
+            />
+          </View>}
+        horizontal
+      />
       <StatusBar style="auto" />
     </View>
   );
