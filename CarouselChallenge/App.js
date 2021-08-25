@@ -18,6 +18,35 @@ import img_5_2 from './assets/5_2.jpg';
 import img_5_3 from './assets/5_3.jpg';
 
 export default function App() {
+
+  const carouselData = [
+    {
+      key: '1',
+      title: 'First Block',
+      images: [img_1_1, img_1_2, img_1_3]
+    },
+    {
+      key: '2',
+      title: 'Second Block',
+      images: [img_2_1, img_2_2, img_2_3]
+    },
+    {
+      key: '3',
+      title: 'Third Block',
+      images: [img_3_1, img_3_2, img_3_3]
+    },
+    {
+      key: '4',
+      title: 'Fourth Block',
+      images: [img_4_1, img_4_2, img_4_3]
+    },
+    {
+      key: '5',
+      title: 'Fifth Block',
+      images: [img_5_1, img_5_2, img_5_3]
+    }
+  ];
+
   return (
     <View style={styles.container}>
       <Text>Open up App.js to start working on your app!</Text>
