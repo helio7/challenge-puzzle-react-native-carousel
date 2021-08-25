@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Image, Dimensions } from 'react-native';
 
 // I know these imports look a bit repetitive, but I don't
 // know how to better import the images. So for the purposes
@@ -57,18 +57,21 @@ export default function App() {
         My first idea is to implement the carousel using
         an horizontal FlatList.
       */}
-      <FlatList
-        data={carouselData}
-        renderItem={({item}) => 
-          <View>
-            <Text>{item.title}</Text>
-            <Image
-              style={styles.carouselImage}
-              source={item.images[0]}
-            />
-          </View>}
-        horizontal
-      />
+      <View style={styles.carouselContainer}>
+        <FlatList
+          data={carouselData}
+          renderItem={({item}) => 
+            <View>
+              <Text>{item.title}</Text>
+              <Image
+                style={styles.carouselImage}
+                source={item.images[0]}
+              />
+            </View>}
+          horizontal
+          pagingEnabled={true}
+        />
+      </View>
       <StatusBar style="auto" />
     </View>
   );
@@ -77,12 +80,18 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'lightgray',
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 20,
   },
   carouselImage: {
-    width: 150,
-    height: 150
+    width: Dimensions.get('window').width - 42,
+    height: Dimensions.get('window').height - 62
+  },
+  carouselContainer: {
+    backgroundColor: 'white',
+    borderColor: 'black',
+    borderWidth: 1
   }
 });
