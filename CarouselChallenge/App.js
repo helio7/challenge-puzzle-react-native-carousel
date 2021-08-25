@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, Image, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Image, Dimensions, TouchableOpacity } from 'react-native';
 
 // I know these imports look a bit repetitive, but I don't
 // know how to better import the images. So for the purposes
@@ -53,16 +53,12 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      {/* 
-        My first idea is to implement the carousel using
-        an horizontal FlatList.
-      */}
       <View style={styles.carouselContainer}>
         <FlatList
           data={carouselData}
           renderItem={({item}) => 
             <View>
-              <Text>{item.title}</Text>
+              <Text style={styles.itemTitle}>{item.title}</Text>
               <Image
                 style={styles.carouselImage}
                 source={item.images[0]}
@@ -72,6 +68,14 @@ export default function App() {
           pagingEnabled={true}
         />
       </View>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity style={styles.button}>
+          <Text>Previous</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button}>
+          <Text>Next</Text>
+        </TouchableOpacity>
+      </View>
       <StatusBar style="auto" />
     </View>
   );
@@ -79,19 +83,51 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: 'lightgray',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
+    paddingTop: 30,
+    paddingBottom: 20,
+    paddingHorizontal: 20,
+    backgroundColor: 'lightgray'
+  },
+  carouselContainer: {
+    height: Dimensions.get('window').height - 109,
+    backgroundColor: 'white',
+    borderColor: 'black',
+    borderWidth: 1,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10
+  },
+  itemTitle: {
+    borderBottomWidth: 1,
+    borderBottomColor: 'black',
+    width: '100%',
+    textAlign: 'center'
   },
   carouselImage: {
     width: Dimensions.get('window').width - 42,
-    height: Dimensions.get('window').height - 62
+    height: Dimensions.get('window').height - 123
   },
-  carouselContainer: {
-    backgroundColor: 'white',
+  buttonsContainer: {
+    width: Dimensions.get('window').width - 40,
+    height: 60,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
     borderColor: 'black',
-    borderWidth: 1
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    backgroundColor: 'white'
+  },
+  button: {
+    width: 70,
+    height: 30,
+    borderWidth: 1,
+    borderColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'lightblue',
+    borderRadius: 5
   }
 });
