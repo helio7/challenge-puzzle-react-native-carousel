@@ -62,4 +62,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  carouselImage: {
+    width: 150,
+    height: 150
+  }
 });
