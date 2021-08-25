@@ -1,6 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+
+// I know these imports look a bit repetitive, but I don't
+// know how to better import the images. So for the purposes
+// of this demo I think I'll let it this way.
 import img_1_1 from './assets/1_1.jpg';
 import img_1_2 from './assets/1_2.jpg';
 import img_1_3 from './assets/1_3.jpg';
