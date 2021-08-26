@@ -100,13 +100,13 @@ export default function App() {
         />
       </View>
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.button} onPress={scrollPrevious}
+        <TouchableOpacity style={buttonPreviousDisabled ? styles.disabledButton : styles.button} onPress={scrollPrevious}
           disabled={buttonPreviousDisabled ? true : false}>
-          <Text>Previous</Text>
+          <Text style={{color: buttonPreviousDisabled ? '#666666' : 'black'}}>Previous</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={scrollNext}
+        <TouchableOpacity style={buttonNextDisabled ? styles.disabledButton : styles.button} onPress={scrollNext}
           disabled={buttonNextDisabled ? true : false}>
-          <Text>Next</Text>
+          <Text style={{color: buttonNextDisabled ? '#666666' : 'black'}}>Next</Text>
         </TouchableOpacity>
       </View>
       <StatusBar style="auto" />
@@ -152,6 +152,16 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
     backgroundColor: 'white'
+  },
+  disabledButton: {
+    width: 70,
+    height: 30,
+    borderWidth: 1,
+    borderColor: '#999999', // Different from 'button' style
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#cccccc', // Different from 'button' style
+    borderRadius: 5
   },
   button: {
     width: 70,
