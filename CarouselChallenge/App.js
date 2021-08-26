@@ -64,6 +64,7 @@ export default function App() {
         animated: true
       });
       if (currentIndex === carouselData.length - 2) setButtonNextDisabled(true);
+      setButtonPreviousDisabled(false);
       setCurrentIndex(currentIndex + 1);
     }
   };
@@ -75,6 +76,7 @@ export default function App() {
         animated: true
       });
       if (currentIndex === 1) setButtonPreviousDisabled(true);
+      setButtonNextDisabled(false);
       setCurrentIndex(currentIndex - 1);
     }
   };
