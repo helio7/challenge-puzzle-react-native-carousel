@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { StyleSheet, Text, View, FlatList, Image, Dimensions, TouchableOpacity } from 'react-native';
 
 // I know these imports look a bit repetitive, but I don't
@@ -51,6 +51,30 @@ export default function App() {
     }
   ];
 
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const flatListRef = useRef(null);
+
+  const scrollNext = () => {
+    if ((currentIndex + 1) < carouselData.length) {
+      setCurrentIndex(currentIndex + 1);
+      flatListRef.current.scrollToIndex({
+        index: currentIndex + 1,
+        animated: true
+      });
+    }
+  };
+
+  const scrollPrevious = () => {
+    if ((currentIndex - 1) >= 0) {
+      setCurrentIndex(currentIndex - 1);
+      flatListRef.current.scrollToIndex({
+        index: currentIndex - 1,
+        animated: true
+      });
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.carouselContainer}>
@@ -66,13 +90,14 @@ export default function App() {
             </View>}
           horizontal
           pagingEnabled={true}
+          ref={flatListRef}
         />
       </View>
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={scrollPrevious}>
           <Text>Previous</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={scrollNext}>
           <Text>Next</Text>
         </TouchableOpacity>
       </View>
