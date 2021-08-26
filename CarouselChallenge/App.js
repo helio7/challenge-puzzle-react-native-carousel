@@ -125,7 +125,11 @@ export default function App() {
         <FlatList
           data={carouselData}
           renderItem={({item}) => 
-            <View>
+            <View style={{
+              marginLeft: item.key === '1' ? 0 : 10,
+              borderWidth: 1,
+              borderRadius: 10
+            }}>
               <Text style={styles.itemTitle}>{item.title}</Text>
               <Image
                 style={styles.carouselImage}
@@ -156,18 +160,19 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 30,
+    paddingTop: 80,
     paddingBottom: 20,
     paddingHorizontal: 20,
-    backgroundColor: 'lightgray'
+    backgroundColor: 'lightgray',
+    height: Dimensions.get('window').height,
   },
   carouselContainer: {
-    height: Dimensions.get('window').height - 109,
     backgroundColor: 'white',
     borderColor: 'black',
     borderWidth: 1,
     borderTopLeftRadius: 10,
-    borderTopRightRadius: 10
+    borderTopRightRadius: 10,
+    padding: 10,
   },
   itemTitle: {
     borderBottomWidth: 1,
@@ -176,8 +181,10 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   carouselImage: {
-    width: Dimensions.get('window').width - 42,
-    height: Dimensions.get('window').height - 123
+    width: (Dimensions.get('window').width - 60) * 0.3,
+    height: (Dimensions.get('window').width - 60) * 0.3,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10
   },
   buttonsContainer: {
     width: Dimensions.get('window').width - 40,
