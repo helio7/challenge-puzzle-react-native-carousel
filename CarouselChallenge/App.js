@@ -58,19 +58,23 @@ export default function App() {
   const flatListRef = useRef(null);
 
   const scrollNext = () => {
-    flatListRef.current.scrollToIndex({
-      index: currentIndex + 1,
-      animated: true
-    });
-    setCurrentIndex(currentIndex + 1);
+    if (currentIndex < carouselData.length - 1) {
+      flatListRef.current.scrollToIndex({
+        index: currentIndex + 1,
+        animated: true
+      });
+      setCurrentIndex(currentIndex + 1);
+    }
   };
 
   const scrollPrevious = () => {
-    flatListRef.current.scrollToIndex({
-      index: currentIndex - 1,
-      animated: true
-    });
-    setCurrentIndex(currentIndex - 1);
+    if (currentIndex > 0) {
+      flatListRef.current.scrollToIndex({
+        index: currentIndex - 1,
+        animated: true
+      });
+      setCurrentIndex(currentIndex - 1);
+    }
   };
 
   return (
