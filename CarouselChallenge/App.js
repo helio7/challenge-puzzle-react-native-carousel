@@ -52,6 +52,8 @@ export default function App() {
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [buttonPreviousDisabled, setButtonPreviousDisabled] = useState(true);
+  const [buttonNextDisabled, setButtonNextDisabled] = useState(false);
 
   const flatListRef = useRef(null);
 
@@ -94,10 +96,12 @@ export default function App() {
         />
       </View>
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.button} onPress={scrollPrevious}>
+        <TouchableOpacity style={styles.button} onPress={scrollPrevious}
+          disabled={buttonPreviousDisabled ? true : false}>
           <Text>Previous</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={scrollNext}>
+        <TouchableOpacity style={styles.button} onPress={scrollNext}
+          disabled={buttonNextDisabled ? true : false}>
           <Text>Next</Text>
         </TouchableOpacity>
       </View>
