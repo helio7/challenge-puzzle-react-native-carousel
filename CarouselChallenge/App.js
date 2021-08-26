@@ -57,6 +57,44 @@ export default function App() {
 
   const flatListRef = useRef(null);
 
+  // Method to register page changes when swiping the screen.
+  const onViewRef = useRef((viewableItems) => {
+
+    // This is executed each time the user swipes the screen and
+    // goes to the next or previous page (not using the buttons).
+
+    // We want to do something only when there's an interaction between
+    // two viewable items (one disappears and the other appears).
+
+    // If there's only one viewable item involved, the interaction we need
+    // didn't happen. So we'll do nothing in that case.
+    if (viewableItems.changed.length === 1) return;
+
+    // Current screen index, and the old one.
+    // I.E. if the user goes from the third block to the second one:
+    // newIndex = 1
+    // oldIndex = 2
+    const newIndex = viewableItems.changed[0].index;
+    const oldIndex = viewableItems.changed[1].index;
+
+    // The user scrolled to the right.
+    if (oldIndex < newIndex) {
+      if (oldIndex === carouselData.length - 2) setButtonNextDisabled(true);
+      setButtonPreviousDisabled(false);
+      setCurrentIndex(newIndex);
+    } 
+    // The user scrolled to the left.
+    else if (newIndex < oldIndex) {
+      if (oldIndex === 1) setButtonPreviousDisabled(true);
+      setButtonNextDisabled(false);
+      setCurrentIndex(newIndex);
+    }
+
+  });
+
+  // A page change through swiping happens when a new item is X% visible.
+  const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50 });
+
   const scrollNext = () => {
     if (currentIndex < carouselData.length - 1) {
       flatListRef.current.scrollToIndex({
@@ -97,6 +135,8 @@ export default function App() {
           horizontal
           pagingEnabled={true}
           ref={flatListRef}
+          onViewableItemsChanged={onViewRef.current}
+          viewabilityConfig={viewConfigRef.current}
         />
       </View>
       <View style={styles.buttonsContainer}>
