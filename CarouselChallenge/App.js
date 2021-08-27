@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { StyleSheet, Text, View, FlatList, Image, Dimensions, TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // I know these imports look a bit repetitive, but I don't
 // know how to better import the images. So for the purposes
@@ -67,7 +68,7 @@ export default function App() {
   const flatListRef = useRef(null);
 
   // Method to register page changes when swiping the screen.
-  const onViewRef = useRef((viewableItems) => {
+  const onViewRef = useRef(async (viewableItems) => {
 
     // If exactly 3 items are viewable after scrolling, we have to
     // guess and update the current position index of the state.
@@ -79,6 +80,7 @@ export default function App() {
       // corresponds to the index of the first item.
       const newIndex = viewableItems.viewableItems[0].index;
       setCurrentIndex(newIndex);
+      await AsyncStorage.setItem('@currentIndex', newIndex.toString());
 
       // We get information about which item triggered
       // this event when becoming viewable. If this item
@@ -86,18 +88,26 @@ export default function App() {
       if (viewableItems.changed[0].index === viewableItems.viewableItems[0].index) {
         
         // If we arrived to the left end, disable the "Previous" button.
-        if (newIndex === 0) setButtonPreviousDisabled(true)
+        if (newIndex === 0) {
+          setButtonPreviousDisabled(true)
+          await AsyncStorage.setItem('@buttonPreviousDisabled', '1');
+        }
         
         // If we moved to the left, we should be able to go to the right.
         setButtonNextDisabled(false);
+        await AsyncStorage.setItem('@buttonNextDisabled', '0');
 
       } else if (viewableItems.changed[0].index === viewableItems.viewableItems[2].index) {
         
         // If we arrived to the right end, disable the "Next" button.
-        if (newIndex === carouselData.length - 3) setButtonNextDisabled(true);
+        if (newIndex === carouselData.length - 3) {
+          setButtonNextDisabled(true);
+          await AsyncStorage.setItem('@buttonNextDisabled', '1');
+        }
         
         // If we moved to the right, we should be able to go to the left.
         setButtonPreviousDisabled(false);
+        await AsyncStorage.setItem('@buttonPreviousDisabled', '0');
 
       }
 
@@ -108,29 +118,56 @@ export default function App() {
   // A page change through swiping happens when a new item is X% visible.
   const viewConfigRef = useRef({ itemVisiblePercentThreshold: 50 });
 
-  const scrollNext = () => {
+  useEffect(() => {
+    readData();
+  }, [])
+
+  const readData = async () => {
+    try {
+      let index = await AsyncStorage.getItem('@currentIndex');
+      if (index !== null) setCurrentIndex(parseInt(index));
+      let previousDisabled = await AsyncStorage.getItem('@buttonPreviousDisabled');
+      if (previousDisabled === '1') setButtonPreviousDisabled(true);
+      let nextDisabled = await AsyncStorage.getItem('@buttonNextDisabled');
+      if (nextDisabled === '1') setButtonNextDisabled(true);
+    } catch (e) {
+      console.log('Failed to fetch the data from storage.');
+    }
+  }
+
+  const scrollNext = async () => {
     if (currentIndex < carouselData.length - 1) {
       flatListRef.current.scrollToIndex({
         index: currentIndex + 1,
         animated: true,
         viewOffset: -10
       });
-      if (currentIndex === carouselData.length - 4) setButtonNextDisabled(true);
+      if (currentIndex === carouselData.length - 4) {
+        setButtonNextDisabled(true);
+        await AsyncStorage.setItem('@buttonNextDisabled', '1');
+      }
       setButtonPreviousDisabled(false);
+      await AsyncStorage.setItem('@buttonPreviousDisabled', '0');
       setCurrentIndex(currentIndex + 1);
+      await AsyncStorage.setItem('@currentIndex', (currentIndex + 1).toString());
     }
   };
 
-  const scrollPrevious = () => {
+  const scrollPrevious = async () => {
     if (currentIndex > 0) {
       flatListRef.current.scrollToIndex({
         index: currentIndex - 1,
         animated: true,
         viewOffset: currentIndex === 1 ? 0 : -10
       });
-      if (currentIndex === 1) setButtonPreviousDisabled(true);
+      if (currentIndex === 1) {
+        setButtonPreviousDisabled(true);
+        await AsyncStorage.setItem('@buttonPreviousDisabled', '1');
+      }
       setButtonNextDisabled(false);
+      await AsyncStorage.setItem('@buttonNextDisabled', '0');
       setCurrentIndex(currentIndex - 1);
+      await AsyncStorage.setItem('@currentIndex', (currentIndex - 1).toString());
     }
   };
 
