@@ -60,48 +60,53 @@ export default function App() {
   // Method to register page changes when swiping the screen.
   const onViewRef = useRef((viewableItems) => {
 
-    // This is executed each time the user swipes the screen and
-    // goes to the next or previous page (not using the buttons).
+    // If exactly 3 items are viewable after scrolling, we have to
+    // guess and update the current position index of the state.
+    // And also properly update the state of the buttons. 
+    if (viewableItems.viewableItems.length === 3) {
 
-    // We want to do something only when there's an interaction between
-    // two viewable items (one disappears and the other appears).
-
-    // If there's only one viewable item involved, the interaction we need
-    // didn't happen. So we'll do nothing in that case.
-    if (viewableItems.changed.length === 1) return;
-
-    // Current screen index, and the old one.
-    // I.E. if the user goes from the third block to the second one:
-    // newIndex = 1
-    // oldIndex = 2
-    const newIndex = viewableItems.changed[0].index;
-    const oldIndex = viewableItems.changed[1].index;
-
-    // The user scrolled to the right.
-    if (oldIndex < newIndex) {
-      if (oldIndex === carouselData.length - 2) setButtonNextDisabled(true);
-      setButtonPreviousDisabled(false);
+      // The carousel shows a maximum of 3 items.
+      // The final index we have to set in the state
+      // corresponds to the index of the first item.
+      const newIndex = viewableItems.viewableItems[0].index;
       setCurrentIndex(newIndex);
-    } 
-    // The user scrolled to the left.
-    else if (newIndex < oldIndex) {
-      if (oldIndex === 1) setButtonPreviousDisabled(true);
-      setButtonNextDisabled(false);
-      setCurrentIndex(newIndex);
+
+      // We get information about which item triggered
+      // this event when becoming viewable. If this item
+      // is the one on the left, the user scrolled to the left.
+      if (viewableItems.changed[0].index === viewableItems.viewableItems[0].index) {
+        
+        // If we arrived to the left end, disable the "Previous" button.
+        if (newIndex === 0) setButtonPreviousDisabled(true)
+        
+        // If we moved to the left, we should be able to go to the right.
+        setButtonNextDisabled(false);
+
+      } else if (viewableItems.changed[0].index === viewableItems.viewableItems[2].index) {
+        
+        // If we arrived to the right end, disable the "Next" button.
+        if (newIndex === carouselData.length - 3) setButtonNextDisabled(true);
+        
+        // If we moved to the right, we should be able to go to the left.
+        setButtonPreviousDisabled(false);
+
+      }
+
     }
 
   });
 
   // A page change through swiping happens when a new item is X% visible.
-  const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50 });
+  const viewConfigRef = useRef({ itemVisiblePercentThreshold: 50 });
 
   const scrollNext = () => {
     if (currentIndex < carouselData.length - 1) {
       flatListRef.current.scrollToIndex({
         index: currentIndex + 1,
-        animated: true
+        animated: true,
+        viewOffset: -10
       });
-      if (currentIndex === carouselData.length - 2) setButtonNextDisabled(true);
+      if (currentIndex === carouselData.length - 4) setButtonNextDisabled(true);
       setButtonPreviousDisabled(false);
       setCurrentIndex(currentIndex + 1);
     }
@@ -111,7 +116,8 @@ export default function App() {
     if (currentIndex > 0) {
       flatListRef.current.scrollToIndex({
         index: currentIndex - 1,
-        animated: true
+        animated: true,
+        viewOffset: currentIndex === 1 ? 0 : -10
       });
       if (currentIndex === 1) setButtonPreviousDisabled(true);
       setButtonNextDisabled(false);
@@ -137,10 +143,11 @@ export default function App() {
               />
             </View>}
           horizontal
-          pagingEnabled={true}
           ref={flatListRef}
           onViewableItemsChanged={onViewRef.current}
           viewabilityConfig={viewConfigRef.current}
+          showsHorizontalScrollIndicator={false}
+          snapToInterval={(Dimensions.get('window').width - 60) * 0.3 + 12}
         />
       </View>
       <View style={styles.buttonsContainer}>
