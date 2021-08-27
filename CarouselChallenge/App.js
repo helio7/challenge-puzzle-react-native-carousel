@@ -55,6 +55,15 @@ export default function App() {
   const [buttonPreviousDisabled, setButtonPreviousDisabled] = useState(true);
   const [buttonNextDisabled, setButtonNextDisabled] = useState(false);
 
+  // Each block in the carousel shows a random image.
+  const [randomImagesIndexes, setRandomImagesIndexes] = useState([
+    Math.floor(Math.random() * 3),
+    Math.floor(Math.random() * 3),
+    Math.floor(Math.random() * 3),
+    Math.floor(Math.random() * 3),
+    Math.floor(Math.random() * 3)
+  ]);
+
   const flatListRef = useRef(null);
 
   // Method to register page changes when swiping the screen.
@@ -139,7 +148,7 @@ export default function App() {
               <Text style={styles.itemTitle}>{item.title}</Text>
               <Image
                 style={styles.carouselImage}
-                source={item.images[0]}
+                source={item.images[randomImagesIndexes[parseInt(item.key) - 1]]}
               />
             </View>}
           horizontal
