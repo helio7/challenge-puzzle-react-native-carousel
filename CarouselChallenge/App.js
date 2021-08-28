@@ -94,7 +94,7 @@ export default function App() {
     }
   }
 
-  const scrollNext = async () => {
+  const handleNextPressing = async () => {
     if (currentIndex < carouselData.length - 1) {
       flatListRef.current.scrollToIndex({
         index: currentIndex + 1,
@@ -112,7 +112,7 @@ export default function App() {
     }
   };
 
-  const scrollPrevious = async () => {
+  const handlePreviousPressing = async () => {
     if (currentIndex > 0) {
       flatListRef.current.scrollToIndex({
         index: currentIndex - 1,
@@ -160,11 +160,11 @@ export default function App() {
         />
       </View>
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={buttonPreviousDisabled ? styles.disabledButton : styles.button} onPress={scrollPrevious}
+        <TouchableOpacity style={buttonPreviousDisabled ? styles.disabledButton : styles.button} onPress={handlePreviousPressing}
           disabled={buttonPreviousDisabled ? true : false}>
           <Text style={{color: buttonPreviousDisabled ? '#666666' : 'black'}}>Previous</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={buttonNextDisabled ? styles.disabledButton : styles.button} onPress={scrollNext}
+        <TouchableOpacity style={buttonNextDisabled ? styles.disabledButton : styles.button} onPress={handleNextPressing}
           disabled={buttonNextDisabled ? true : false}>
           <Text style={{color: buttonNextDisabled ? '#666666' : 'black'}}>Next</Text>
         </TouchableOpacity>
