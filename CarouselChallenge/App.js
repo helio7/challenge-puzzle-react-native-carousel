@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { StyleSheet, Text, View, FlatList, Image, Dimensions, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import carouselData from './src/data';
+import { randomNumberBetweenZeroAnd } from './src/utils';
 
 export default function App() {
 
@@ -12,11 +13,11 @@ export default function App() {
 
   // Each block in the carousel shows a random image.
   const [randomImagesIndexes, setRandomImagesIndexes] = useState([
-    Math.floor(Math.random() * 3),
-    Math.floor(Math.random() * 3),
-    Math.floor(Math.random() * 3),
-    Math.floor(Math.random() * 3),
-    Math.floor(Math.random() * 3)
+    randomNumberBetweenZeroAnd(2),
+    randomNumberBetweenZeroAnd(2),
+    randomNumberBetweenZeroAnd(2),
+    randomNumberBetweenZeroAnd(2),
+    randomNumberBetweenZeroAnd(2)
   ]);
 
   const flatListRef = useRef(null);
