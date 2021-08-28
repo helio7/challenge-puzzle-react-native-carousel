@@ -46,3 +46,6 @@ const carouselData = [
  ];
 
  export default carouselData;
+
+import _placeholder_image from '../assets/icon.png';
+export const placeholder_image = _placeholder_image;

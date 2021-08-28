@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState, useRef, useEffect } from 'react';
 import { StyleSheet, Text, View, FlatList, Image, Dimensions, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import carouselData from './src/data';
+import carouselData, { placeholder_image } from './src/data';
 import { randomNumberBetweenZeroAnd } from './src/utils';
 
 export default function App() {
@@ -11,14 +11,8 @@ export default function App() {
   const [buttonPreviousDisabled, setButtonPreviousDisabled] = useState(true);
   const [buttonNextDisabled, setButtonNextDisabled] = useState(false);
 
-  // Each block in the carousel shows a random image.
-  const [randomImagesIndexes, setRandomImagesIndexes] = useState([
-    randomNumberBetweenZeroAnd(2),
-    randomNumberBetweenZeroAnd(2),
-    randomNumberBetweenZeroAnd(2),
-    randomNumberBetweenZeroAnd(2),
-    randomNumberBetweenZeroAnd(2)
-  ]);
+  // An array with indexes that indicate which images each block must show.
+  const [randomImagesIndexes, setRandomImagesIndexes] = useState([]);
 
   const flatListRef = useRef(null);
 
@@ -74,6 +68,16 @@ export default function App() {
   const viewConfigRef = useRef({ itemVisiblePercentThreshold: 50 });
 
   useEffect(() => {
+    // If the random indexes are not initialized, initialize them.
+    if (randomImagesIndexes.length === 0) {
+      const imagesIndexes = [];
+      for (const dataItem of carouselData) {
+        imagesIndexes.push(
+          randomNumberBetweenZeroAnd(dataItem.images.length - 1)
+        );
+      }
+      setRandomImagesIndexes(imagesIndexes);
+    }
     readData();
   }, [])
 
@@ -140,7 +144,11 @@ export default function App() {
               <Text style={styles.itemTitle}>{item.title}</Text>
               <Image
                 style={styles.carouselImage}
-                source={item.images[randomImagesIndexes[parseInt(item.key) - 1]]}
+                source={
+                  randomImagesIndexes.length ? 
+                  item.images[randomImagesIndexes[parseInt(item.key) - 1]] :
+                  placeholder_image
+                }
               />
             </View>}
           horizontal
