@@ -28,8 +28,7 @@ export default function App() {
       // The final index we have to set in the state
       // corresponds to the index of the first item.
       const newIndex = viewableItems.viewableItems[0].index;
-      setCurrentIndex(newIndex);
-      await AsyncStorage.setItem('@currentIndex', newIndex.toString());
+      await updateCurrentIndexAndSave(newIndex);
 
       // We get information about which item triggered
       // this event when becoming viewable. If this item
@@ -37,26 +36,18 @@ export default function App() {
       if (viewableItems.changed[0].index === viewableItems.viewableItems[0].index) {
         
         // If we arrived to the left end, disable the "Previous" button.
-        if (newIndex === 0) {
-          setButtonPreviousDisabled(true)
-          await AsyncStorage.setItem('@buttonPreviousDisabled', '1');
-        }
+        if (newIndex === 0) await updatePreviousButtonStatusAndSave(true);
         
         // If we moved to the left, we should be able to go to the right.
-        setButtonNextDisabled(false);
-        await AsyncStorage.setItem('@buttonNextDisabled', '0');
+        await updateNextButtonStatusAndSave(false);
 
       } else if (viewableItems.changed[0].index === viewableItems.viewableItems[2].index) {
         
         // If we arrived to the right end, disable the "Next" button.
-        if (newIndex === carouselData.length - 3) {
-          setButtonNextDisabled(true);
-          await AsyncStorage.setItem('@buttonNextDisabled', '1');
-        }
+        if (newIndex === carouselData.length - 3) await updateNextButtonStatusAndSave(true);
         
         // If we moved to the right, we should be able to go to the left.
-        setButtonPreviousDisabled(false);
-        await AsyncStorage.setItem('@buttonPreviousDisabled', '0');
+        updatePreviousButtonStatusAndSave(false);
 
       }
 
@@ -94,6 +85,27 @@ export default function App() {
     }
   }
 
+  const updatePreviousButtonStatusAndSave = async (newStatus) => {
+    setButtonPreviousDisabled(newStatus);
+    await AsyncStorage.setItem('@buttonPreviousDisabled',
+      newStatus ? '1' : '0'
+    );
+  }
+
+  const updateNextButtonStatusAndSave = async (newStatus) => {
+    setButtonNextDisabled(newStatus);
+    await AsyncStorage.setItem('@buttonNextDisabled',
+      newStatus ? '1' : '0'
+    );
+  }
+
+  const updateCurrentIndexAndSave = async (newIndex) => {
+    setCurrentIndex(newIndex);
+    await AsyncStorage.setItem('@currentIndex',
+      newIndex.toString()
+    );
+  }
+
   // Executed when pressing the 'Next' button.
   const handleNextPressing = async () => {
 
@@ -108,14 +120,9 @@ export default function App() {
       });
 
       // If that showable item is the last one in the carousel.
-      if (currentIndex === carouselData.length - 4) {
-        setButtonNextDisabled(true);
-        await AsyncStorage.setItem('@buttonNextDisabled', '1');
-      }
-      setButtonPreviousDisabled(false);
-      await AsyncStorage.setItem('@buttonPreviousDisabled', '0');
-      setCurrentIndex(currentIndex + 1);
-      await AsyncStorage.setItem('@currentIndex', (currentIndex + 1).toString());
+      if (currentIndex === carouselData.length - 4) await updateNextButtonStatusAndSave(true);
+      await updatePreviousButtonStatusAndSave(false);
+      await updateCurrentIndexAndSave(currentIndex + 1);
     }
   };
 
@@ -133,14 +140,9 @@ export default function App() {
       });
 
       // If that showable item is the first one in the carousel.
-      if (currentIndex === 1) {
-        setButtonPreviousDisabled(true);
-        await AsyncStorage.setItem('@buttonPreviousDisabled', '1');
-      }
-      setButtonNextDisabled(false);
-      await AsyncStorage.setItem('@buttonNextDisabled', '0');
-      setCurrentIndex(currentIndex - 1);
-      await AsyncStorage.setItem('@currentIndex', (currentIndex - 1).toString());
+      if (currentIndex === 1) await updatePreviousButtonStatusAndSave(true);
+      await updateNextButtonStatusAndSave(false);
+      await updateCurrentIndexAndSave(currentIndex - 1);
     }
   };
 
