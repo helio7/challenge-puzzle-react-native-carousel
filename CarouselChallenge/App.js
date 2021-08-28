@@ -94,13 +94,20 @@ export default function App() {
     }
   }
 
+  // Executed when pressing the 'Next' button.
   const handleNextPressing = async () => {
+
+    // If there's a showable item to the right.
     if (currentIndex < carouselData.length - 1) {
+      
+      // Scroll to the right.
       flatListRef.current.scrollToIndex({
         index: currentIndex + 1,
         animated: true,
-        viewOffset: -10
+        viewOffset: -10 // Items have a left margin, so we have to compensate.
       });
+
+      // If that showable item is the last one in the carousel.
       if (currentIndex === carouselData.length - 4) {
         setButtonNextDisabled(true);
         await AsyncStorage.setItem('@buttonNextDisabled', '1');
@@ -112,13 +119,20 @@ export default function App() {
     }
   };
 
+  // Executed when pressing the 'Previous' button.
   const handlePreviousPressing = async () => {
+
+    // If there's a showable item to the left.
     if (currentIndex > 0) {
+
+      // Scroll to the left.
       flatListRef.current.scrollToIndex({
         index: currentIndex - 1,
         animated: true,
         viewOffset: currentIndex === 1 ? 0 : -10
       });
+
+      // If that showable item is the first one in the carousel.
       if (currentIndex === 1) {
         setButtonPreviousDisabled(true);
         await AsyncStorage.setItem('@buttonPreviousDisabled', '1');
