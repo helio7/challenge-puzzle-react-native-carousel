@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, FlatList, Image, Dimensions, TouchableOpacity }
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import carouselData, { placeholder_image } from './src/data';
 import { randomNumberBetweenZeroAnd } from './src/utils';
+import Button from './src/components/Button';
 
 export default function App() {
 
@@ -176,14 +177,8 @@ export default function App() {
         />
       </View>
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={buttonPreviousDisabled ? styles.disabledButton : styles.button} onPress={handlePreviousPressing}
-          disabled={buttonPreviousDisabled ? true : false}>
-          <Text style={{color: buttonPreviousDisabled ? '#666666' : 'black'}}>Previous</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={buttonNextDisabled ? styles.disabledButton : styles.button} onPress={handleNextPressing}
-          disabled={buttonNextDisabled ? true : false}>
-          <Text style={{color: buttonNextDisabled ? '#666666' : 'black'}}>Next</Text>
-        </TouchableOpacity>
+        <Button disabled={buttonPreviousDisabled} pressCallback={handlePreviousPressing} text='Previous' />
+        <Button disabled={buttonNextDisabled} pressCallback={handleNextPressing} text='Next' />
       </View>
       <StatusBar style="auto" />
     </View>
@@ -231,25 +226,5 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
     backgroundColor: 'white'
-  },
-  disabledButton: {
-    width: 70,
-    height: 30,
-    borderWidth: 1,
-    borderColor: '#999999', // Different from 'button' style
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#cccccc', // Different from 'button' style
-    borderRadius: 5
-  },
-  button: {
-    width: 70,
-    height: 30,
-    borderWidth: 1,
-    borderColor: 'black',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'lightblue',
-    borderRadius: 5
   }
 });
